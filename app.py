@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = '123456'
 
 # Configuración de PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12345@localhost:5432/foro_linea'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubam6xu3ymklpokeg7hq:1t7pZ38diFrObgbAU7iJFcdojR9ivq@bpby7a2d2t1yw4necchg-postgresql.services.clever-cloud.com:50013/bpby7a2d2t1yw4necchg'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
