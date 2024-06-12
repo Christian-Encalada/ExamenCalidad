@@ -8,8 +8,9 @@ app = Flask(__name__)
 app.secret_key = '123456'
 
 # Configuración de PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://udk2eqsliokg054ykqdz:qt7U7HhoDgjpJ9n8QFByJSbEUJ4CuS@bdlizvdsuv534jj7bhlp-postgresql.services.clever-cloud.com:50013/bdlizvdsuv534jj7bhlp')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://udk2eqsliokg054ykqdz:qt7U7HhoDgjpJ9n8QFByJSbEUJ4CuS@bdlizvdsuv534jj7bhlp-postgresql.services.clever-cloud.com:50013/bdlizvdsuv534jj7bhlp'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 db = SQLAlchemy(app)
 
