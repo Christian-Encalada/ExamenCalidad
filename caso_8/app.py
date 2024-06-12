@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
 app.secret_key = '123456'
@@ -12,7 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Definición de modelos
-class Usuarios(db.Model):
+class Usuarios(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     nombre_usuario = db.Column(db.String(100))
     email = db.Column(db.String(100))
@@ -35,105 +36,118 @@ class Respuestas(db.Model):
     tema = db.relationship('Temas', backref=db.backref('respuestas', lazy=True))
     usuario = db.relationship('Usuarios', backref=db.backref('respuestas', lazy=True))
 
-# Rutas
+# Configurar Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Función para cargar el usuario desde la base de datos
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuarios.query.get(int(user_id))
+
+# Rutas y vistas para registro e inicio de sesión
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        if Usuarios.query.filter_by(nombre_usuario=username).first():
+            flash('El nombre de usuario ya está en uso', 'error')
+            return redirect(url_for('registro'))
+
+        nuevo_usuario = Usuarios(nombre_usuario=username, email=email, contraseña=password)
+        db.session.add(nuevo_usuario)
+        db.session.commit()
+
+        flash('¡Registro exitoso! Por favor inicia sesión.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('registro.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        usuario = Usuarios.query.filter_by(nombre_usuario=username).first()
+        if usuario and usuario.contraseña == password:
+            login_user(usuario)
+            flash('¡Inicio de sesión exitoso!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Credenciales incorrectas. Por favor intenta de nuevo.', 'error')
+
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('¡Has cerrado sesión exitosamente!', 'success')
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Ruta para agregar un usuario
-@app.route('/agregar_usuario', methods=['GET', 'POST'])
-def agregar_usuario():
-    if request.method == 'POST':
-        nombre_usuario = request.form['nombre_usuario']
-        email = request.form['email']
-        contraseña = request.form['contraseña']
-        
-        # Creamos un nuevo usuario y lo agregamos a la base de datos
-        nuevo_usuario = Usuarios(nombre_usuario=nombre_usuario, email=email, contraseña=contraseña)
-        db.session.add(nuevo_usuario)
-        db.session.commit()
-        
-        flash('Usuario agregado satisfactoriamente')
-        return redirect(url_for('lista_usuarios'))
-    
-    return render_template('agregar_usuario.html')
-
-# Ruta para mostrar la lista de usuarios
-@app.route('/usuarios')
-def lista_usuarios():
-    usuarios = Usuarios.query.all()
-    return render_template('lista_usuarios.html', usuarios=usuarios)
-
-
-# Rutas para temas
-@app.route('/temas')
-def lista_temas():
+@app.route('/home')
+@login_required
+def home():
     temas = Temas.query.all()
-    return render_template('lista_temas.html', temas=temas)
+    return render_template('home.html', temas=temas)
 
 @app.route('/agregar_tema', methods=['GET', 'POST'])
+@login_required
 def agregar_tema():
     if request.method == 'POST':
-        # Tomar los datos del formulario
         titulo = request.form['titulo']
         descripcion = request.form['descripcion']
-        id_usuario = request.form['id_usuario']  # Asumiendo que se pasa el id_usuario
+        id_usuario = current_user.id
 
-        # Crear un nuevo objeto Tema
         nuevo_tema = Temas(
             titulo=titulo,
             descripcion=descripcion,
             id_usuario=id_usuario,
-            fecha_creacion=datetime.now()  # Añadir la fecha actual
+            fecha_creacion=datetime.now()
         )
 
-        # Agregar el tema a la base de datos
         db.session.add(nuevo_tema)
         db.session.commit()
 
-        # Redirigir a la vista del tema recién creado
         return redirect(url_for('ver_tema', id_tema=nuevo_tema.id))
     
-    # Si el método es GET, simplemente mostrar el formulario
     return render_template('agregar_tema.html')
 
-
-# Rutas para respuestas
 @app.route('/temas/<int:id_tema>')
+@login_required
 def ver_tema(id_tema):
     tema = Temas.query.get_or_404(id_tema)
     respuestas = Respuestas.query.filter_by(id_tema=id_tema).all()
     return render_template('ver_tema.html', tema=tema, respuestas=respuestas)
 
 @app.route('/temas/<int:id_tema>/agregar_respuesta', methods=['POST'])
+@login_required
 def agregar_respuesta(id_tema):
-    if request.method == 'POST':
-        contenido = request.form['contenido']
-        id_usuario = request.form['id_usuario']  # Asegúrate de tener el id del usuario aquí
+    contenido = request.form['contenido']
+    id_usuario = current_user.id
 
-        # Crear un nuevo objeto Respuesta
-        nueva_respuesta = Respuestas(
-            id_tema=id_tema,
-            id_usuario=id_usuario,
-            contenido=contenido,
-            fecha_respuesta=datetime.now()  # Añadir la fecha actual
-        )
+    nueva_respuesta = Respuestas(
+        id_tema=id_tema,
+        id_usuario=id_usuario,
+        contenido=contenido,
+        fecha_respuesta=datetime.now()
+    )
 
-        # Agregar la respuesta a la base de datos
-        db.session.add(nueva_respuesta)
-        db.session.commit()
+    db.session.add(nueva_respuesta)
+    db.session.commit()
 
-        flash('Respuesta agregada satisfactoriamente')
-        return redirect(url_for('ver_tema', id_tema=id_tema))
-
-#ver respuestas
-@app.route('/temas/<int:id_tema>/ver_respuestas')
-def ver_respuestas(id_tema):
-    tema = Temas.query.get_or_404(id_tema)
-    respuestas = Respuestas.query.filter_by(id_tema=id_tema).all()
-    return render_template('ver_respuestas.html', tema=tema, respuestas=respuestas)
-
-
+    flash('Respuesta agregada satisfactoriamente', 'success')
+    return redirect(url_for('ver_tema', id_tema=id_tema))
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
