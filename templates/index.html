@@ -2,9 +2,9 @@
 
 {% block content %}
     <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
+        <div class="col-lg-6 col-md-8 col-sm-10 text-center">
             <!-- Imagen añadida con tamaño personalizado -->
-            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo" class="img-fluid mb-4 w-50">
+            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo" class="img-fluid mb-4">
             <h1>Bienvenido al Foro</h1>
             <p class="lead">Únete a nuestra comunidad y comparte tus conocimientos.</p>
             <p>¿Ya tienes una cuenta? <a href="{{ url_for('login') }}" class="btn btn-primary">Inicia sesión aquí</a></p>
