@@ -20,12 +20,6 @@ Este es un proyecto de foro en línea desarrollado con Flask y PostgreSQL. Permi
 
 
 
-2. Instala las dependencias necesarias:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
 ### Configuración de la Base de Datos
 
 1. Asegúrate de tener PostgreSQL instalado y en funcionamiento en tu máquina.
