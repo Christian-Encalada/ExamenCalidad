@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Tema</title>
+</head>
+<body>
+    <form action="{{ url_for('agregar_tema') }}" method="POST">
+        <div class="form-group">
+            <label for="titulo">Título del Tema:</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" required>
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción del Tema:</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+        </div>
+        <input type="hidden" name="id_usuario" value="1"> <!-- Esto es solo un ejemplo, necesitas manejar el ID de usuario de alguna manera -->
+        <button type="submit" class="btn btn-primary">Agregar Tema</button>
+    </form>
+    
+</body>
+</html>

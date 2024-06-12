@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1 class="mb-4">{{ tema.titulo }}</h1>
+    <p class="mb-4">{{ tema.descripcion }}</p>
+    
+    <h2>Respuestas</h2>
+    <div class="list-group">
+        {% for respuesta in respuestas %}
+            <div class="list-group-item">
+                <h5 class="mb-1">{{ respuesta.usuario.nombre_usuario }}</h5>
+                <p class="mb-1">{{ respuesta.contenido }}</p>
+                <small>Fecha de Respuesta: {{ respuesta.fecha_respuesta }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Formulario para agregar una respuesta -->
+    <form action="{{ url_for('agregar_respuesta', id_tema=tema.id) }}" method="POST">
+        <div class="form-group mt-4">
+            <label for="contenido">Agregar Respuesta:</label>
+            <textarea class="form-control" id="contenido" name="contenido" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar Respuesta</button>
+    </form>
+{% endblock %}
