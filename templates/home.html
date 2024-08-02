@@ -1,16 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <h1 class="mb-4">Temas</h1>
-    <div class="list-group">
-        {% for tema in temas %}
-            <a href="{{ url_for('ver_tema', id_tema=tema.id) }}" class="list-group-item list-group-item-action">
-                <h5 class="mb-1">{{ tema.titulo }}</h5>
-                <p class="mb-1">{{ tema.descripcion }}</p>
-                <small>Creado por: {{ tema.usuario.nombre_usuario }} el {{ tema.fecha_creacion }}</small>
-            </a>
-        {% endfor %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h1>Servio de Pago</h1>
+        <ul class="list-group">
+            {% for tema in temas %}
+            <li class="list-group-item">
+                <a href="{{ url_for('ver_tema', id_tema=tema.id) }}">{{ tema.titulo }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        
+        <!-- Botón para ir al servicio de pagar -->
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('pago') }}" class="btn btn-success">Realizar Pago</a>
+        </div>
     </div>
-    <a href="{{ url_for('agregar_tema') }}" class="btn btn-primary mt-3">Agregar Tema</a>
-    <a href="{{ url_for('logout') }}" class="btn btn-danger mt-3">Cerrar Sesión</a>
+</div>
 {% endblock %}

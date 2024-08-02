@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = '123456'
 
 # Configuración de PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://udk2eqsliokg054ykqdz:qt7U7HhoDgjpJ9n8QFByJSbEUJ4CuS@bdlizvdsuv534jj7bhlp-postgresql.services.clever-cloud.com:50013/bdlizvdsuv534jj7bhlp'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12345@localhost:5432/pagos_linea'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -37,6 +37,25 @@ class Respuestas(db.Model):
     fecha_respuesta = db.Column(db.Date)
     tema = db.relationship('Temas', backref=db.backref('respuestas', lazy=True))
     usuario = db.relationship('Usuarios', backref=db.backref('respuestas', lazy=True))
+
+
+class Transaccion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    monto = db.Column(db.Float)
+    fecha = db.Column(db.DateTime, default=datetime.now)
+    usuario = db.relationship('Usuarios', backref=db.backref('transacciones', lazy=True))
+
+class Factura(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    id_transaccion = db.Column(db.Integer, db.ForeignKey('transaccion.id'))
+    fecha = db.Column(db.DateTime, default=datetime.now)
+    monto = db.Column(db.Float)
+    usuario = db.relationship('Usuarios', backref=db.backref('facturas', lazy=True))
+    transaccion = db.relationship('Transaccion', backref=db.backref('factura', lazy=True))
+
+
 
 # Configurar Flask-Login
 login_manager = LoginManager()
@@ -149,8 +168,35 @@ def agregar_respuesta(id_tema):
     flash('Respuesta agregada satisfactoriamente', 'success')
     return redirect(url_for('ver_tema', id_tema=id_tema))
 
+
+@app.route('/pago', methods=['GET', 'POST'])
+@login_required
+def pago():
+    if request.method == 'POST':
+        monto = float(request.form['monto'])
+        # Simular una transacción
+        nueva_transaccion = Transaccion(id_usuario=current_user.id, monto=monto)
+        db.session.add(nueva_transaccion)
+        db.session.commit()
+
+        # Crear factura
+        nueva_factura = Factura(id_usuario=current_user.id, id_transaccion=nueva_transaccion.id, monto=monto)
+        db.session.add(nueva_factura)
+        db.session.commit()
+
+        flash('Pago realizado con éxito', 'success')
+        return redirect(url_for('historial'))
+    return render_template('pago.html')
+
+@app.route('/historial')
+@login_required
+def historial():
+    transacciones = Transaccion.query.filter_by(id_usuario=current_user.id).all()
+    facturas = Factura.query.filter_by(id_usuario=current_user.id).all()
+    return render_template('historial.html', transacciones=transacciones, facturas=facturas)
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=False)
-
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)
