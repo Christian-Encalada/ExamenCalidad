@@ -1,14 +1,31 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <!-- Imagen añadida con tamaño personalizado -->
-            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo" class="img-fluid mb-4 w-50">
-            <h1>Bienvenido al Foro</h1>
-            <p class="lead">Únete a nuestra comunidad y comparte tus conocimientos.</p>
-            <p>¿Ya tienes una cuenta? <a href="{{ url_for('login') }}" class="btn btn-primary">Inicia sesión aquí</a></p>
-            <p>¿Eres nuevo aquí? <a href="{{ url_for('registro') }}" class="btn btn-secondary">Regístrate ahora</a></p>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="height: 80vh;">
+        <div class="col-md-6">
+            <h1 class="text-center">Bienvenido al Sistema de Gestión de Viajes</h1>
+            <p class="text-center">Administra y organiza tus viajes con facilidad.</p>
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Iniciar Sesión</h2>
+                    <form action="{{ url_for('login') }}" method="POST">
+                        <div class="form-group">
+                            <label for="nombre_usuario">Nombre de usuario</label>
+                            <input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contraseña">Contraseña</label>
+                            <input type="password" class="form-control" id="contraseña" name="contraseña" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                    </form>
+                    <p class="text-center mt-3">
+                        ¿No tienes una cuenta? <a href="{{ url_for('registro') }}">Registrarse</a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}

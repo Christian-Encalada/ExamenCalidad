@@ -1,69 +1,38 @@
-# Foro en Línea
+# Sistema de Gestión de Usuarios y Tareas
 
-Este es un proyecto de foro en línea desarrollado con Flask y PostgreSQL. Permite a los usuarios registrarse, iniciar sesión, crear temas y agregar respuestas a los temas existentes.
+Este proyecto es un sistema de gestión de usuarios y tareas, construido con **Flask** para el backend y **Selenium** para las pruebas automatizadas. El sistema permite la creación y gestión de usuarios y tareas, así como la realización de pruebas de funcionalidad para asegurar el correcto funcionamiento de las funcionalidades principales.
 
-## Configuración del Proyecto
+## Contenido del Proyecto
 
-### Prerrequisitos
+- **Backend**: Implementado con Flask, SQLAlchemy y Marshmallow.
+- **Frontend**: HTML y CSS básicos para la visualización de la interfaz de usuario.
+- **Pruebas**: Automatizadas con Selenium para verificar la funcionalidad del login y el registro de usuarios.
 
-1. Python 3.x
-2. PostgreSQL
+## Instalación
 
-### Instalación
+### Prerequisitos
 
-1. Clona este repositorio en tu máquina local:
+- Python 3.8 o superior
+- Pip (gestor de paquetes de Python)
+- Navegador web compatible (Chrome, Firefox, etc.)
+- WebDriver correspondiente al navegador (por ejemplo, ChromeDriver para Chrome)
 
-    ```bash
-    git clone https://github.com/tu_usuario/tu_repositorio.git
-    cd tu_repositorio
-    ```
+### Pasos para la Instalación
 
+1. **Clonar el Repositorio**
 
+   ```bash
+   git clone https://github.com/tu_usuario/tu_repositorio.git
 
-### Configuración de la Base de Datos
+2. **Instala dependencias:**
 
-1. Asegúrate de tener PostgreSQL instalado y en funcionamiento en tu máquina.
-2. Crea una base de datos llamada `foro_linea`:
-
-    ```sql
-    CREATE DATABASE foro_linea;
-    ```
-
-3. Ejecuta los siguientes queries para crear las tablas necesarias:
-
-    ```sql
-
-    
-    CREATE TABLE Usuarios (
-        id SERIAL PRIMARY KEY,
-        nombre_usuario VARCHAR(100),
-        email VARCHAR(100),
-        contraseña VARCHAR(100)
-    );
-
-    CREATE TABLE Temas (
-        id SERIAL PRIMARY KEY,
-        titulo VARCHAR(100),
-        descripcion TEXT,
-        id_usuario INT,
-        fecha_creacion DATE,
-        FOREIGN KEY (id_usuario) REFERENCES Usuarios(id)
-    );
-
-    CREATE TABLE Respuestas (
-        id SERIAL PRIMARY KEY,
-        id_tema INT,
-        id_usuario INT,
-        contenido TEXT,
-        fecha_respuesta DATE,
-        FOREIGN KEY (id_tema) REFERENCES Temas(id),
-        FOREIGN KEY (id_usuario) REFERENCES Usuarios(id)
-    );
-    ```
+pip install -r requirements.txt
 
 
-### Estructura del Proyecto
+3. **Configurar las Variables de Entorno**
 
-Ejecuta el codigo en app.py
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12345@localhost:5432/gestion_viajes'
 
+4. **ejecutar:**
 
+python app.py

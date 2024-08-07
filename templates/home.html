@@ -1,21 +1,45 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h1>Temas</h1>
-        <ul class="list-group">
-            {% for tema in temas %}
-            <li class="list-group-item">
-                <a href="{{ url_for('ver_tema', id_tema=tema.id) }}">{{ tema.titulo }}</a>
-            </li>
-            {% endfor %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for category, message in messages %}
+            <li class="alert alert-{{ category }}">{{ message }}</li>
+        {% endfor %}
         </ul>
-        
-        <!-- Botón para ir al servicio de pagar -->
-        <div class="mt-4 text-center">
-            <a href="{{ url_for('pago') }}" class="btn btn-success">Realizar Pago</a>
+    {% endif %}
+{% endwith %}
+<h1>Home</h1>
+<p>Bienvenido a la plataforma de gestión de viajes. Utilice el menú para navegar por las funcionalidades disponibles.</p>
+
+<h2>Vuelos Recomendados</h2>
+<div class="row">
+    {% for vuelo in vuelos %}
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ vuelo.destino }}</h5>
+                <p class="card-text">Salida: {{ vuelo.fecha_salida }}</p>
+                <p class="card-text">Precio: ${{ vuelo.precio }}</p>
+                <form action="{{ url_for('reservar_vuelo', vuelo_id=vuelo.id) }}" method="POST">
+                    <button type="submit" class="btn btn-primary">Reservar</button>
+                </form>
+            </div>
         </div>
     </div>
+    {% endfor %}
 </div>
+
+<h2>Gestión de Itinerarios</h2>
+<p>
+    <a href="{{ url_for('gestionar_itinerarios') }}" class="btn btn-secondary">Ver Itinerarios</a>
+    <a href="{{ url_for('nuevo_itinerario') }}" class="btn btn-secondary">Crear Itinerario</a>
+</p>
+
+<h2>Reportes de Gastos y Experiencias</h2>
+<p>
+    <a href="{{ url_for('listar_reportes') }}" class="btn btn-secondary">Ver Reportes</a>
+    <a href="{{ url_for('nuevo_reporte') }}" class="btn btn-secondary">Crear Reporte</a>
+</p>
 {% endblock %}

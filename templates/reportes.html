@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Reportes</h1>
+<a href="{{ url_for('nuevo_reporte') }}" class="btn btn-primary">Nuevo Reporte</a>
+<ul>
+    {% for reporte in reportes %}
+    <li>
+        <h2>{{ reporte.tipo }}</h2>
+        <p>{{ reporte.descripcion }}</p>
+        <p>{{ reporte.fecha }}</p>
+        <a href="{{ url_for('editar_reporte', id=reporte.id) }}" class="btn btn-secondary">Editar</a>
+        <form action="{{ url_for('eliminar_reporte', id=reporte.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

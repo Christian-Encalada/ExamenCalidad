@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>Notificaciones</h1>
+            <ul class="list-group">
+                {% for notificacion in notificaciones %}
+                <li class="list-group-item">
+                    <span>{{ notificacion.mensaje }}</span>
+                    <br>
+                    <small class="text-muted">{{ notificacion.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,28 +1,235 @@
-/* style.css */
 body {
-    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #6e8efb, #a777e3);
+    color: #333;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.container {
-    margin-top: 50px;
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s;
 }
 
-h1 {
-    margin-bottom: 30px;
+#sidebar {
+    min-width: 80px;
+    max-width: 80px;
+    background: #343a40;
+    color: #fff;
+    transition: all 0.3s;
+    overflow: hidden;
+    height: 100%;
 }
 
-.form-control {
-    margin-bottom: 15px;
+#sidebar.active {
+    min-width: 250px;
+    max-width: 250px;
+}
+
+#sidebar .sidebar-header, #sidebar ul.components {
+    display: none;
+    transition: display 0.3s;
+}
+
+#sidebar.active .sidebar-header, #sidebar.active ul.components {
+    display: block;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+    color: #d1d1d1;
+    transition: color 0.3s, background 0.3s;
+    white-space: nowrap;
+}
+
+#sidebar ul li a:hover {
+    color: #7386d5;
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+
+#content {
+    width: calc(100% - 80px);
+    padding: 20px;
+    transition: all 0.3s;
+    height: 100%;
+    overflow-y: auto;
+}
+
+#sidebar.active ~ #content {
+    width: calc(100% - 250px);
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        min-width: 250px;
+        max-width: 250px;
+    }
+    #sidebar.active {
+        min-width: 80px;
+        max-width: 80px;
+    }
+    #content {
+        width: calc(100% - 250px);
+    }
+    #sidebar.active ~ #content {
+        width: calc(100% - 80px);
+    }
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1.1em;
+    margin-bottom: 10px;
 }
 
 .btn {
-    margin-top: 15px;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
-.navbar {
-    margin-bottom: 30px;
+.btn:hover {
+    background: linear-gradient(135deg, #a777e3, #6e8efb);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-.alert {
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    padding: 10px 20px;
+    border-radius: 5px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.5s;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.full-height-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    width: 800px;
+    max-width: 100%;
+    margin: auto;
+}
+
+.form-container {
+    padding: 50px;
+    flex: 1;
+}
+
+.form-container h1 {
+    margin-bottom: 24px;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #6e8efb;
+}
+
+.switch-container {
+    padding: 50px;
+    background: linear-gradient(to right, #6e8efb, #a777e3);
+    color: #fff;
+    text-align: center;
+}
+
+.switch-container h2 {
+    margin-bottom: 24px;
+    font-size: 24px;
+}
+
+.switch-container p {
+    font-size: 16px;
+}
+
+.switch-container a {
+    color: #fff;
+    text-decoration: underline;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.switch-container a:hover {
+    color: #ddd;
 }

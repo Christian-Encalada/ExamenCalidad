@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Nuevo Itinerario</h1>
+<form action="{{ url_for('nuevo_itinerario') }}" method="POST">
+    <div class="form-group">
+        <label for="titulo">Título</label>
+        <input type="text" class="form-control" id="titulo" name="titulo" required>
+    </div>
+    <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="fecha_inicio">Fecha de Inicio</label>
+        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+    </div>
+    <div class="form-group">
+        <label for="fecha_fin">Fecha de Fin</label>
+        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock %}

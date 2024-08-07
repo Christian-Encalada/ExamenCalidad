@@ -1,22 +1,30 @@
-{% extends 'layout2.html' %}
+{% extends 'layout.html' %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-6 d-flex flex-column align-items-center">
-            <!-- Imagen añadida con tamaño personalizado -->
-            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo" class="img-fluid mb-4 w-50 mx-auto">
-            <h1 class="text-center">Iniciar Sesión</h1>
-            <form action="{{ url_for('login') }}" method="POST" class="border p-4 bg-light shadow-sm rounded w-100">
+<div class="full-height-container">
+    <div class="container">
+        <div class="form-container">
+            <h1>Iniciar Sesión</h1>
+            <form action="{{ url_for('login') }}" method="POST">
                 <div class="form-group">
-                    <label for="username">🫡 Nombre de usuario:</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
+                    <label for="nombre_usuario">Nombre de usuario</label>
+                    <input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">⛓️Contraseña:</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <label for="contraseña">Contraseña</label>
+                    <input type="password" class="form-control" id="contraseña" name="contraseña" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                <button type="submit" class="btn">Iniciar Sesión</button>
             </form>
+            <p class="text-center mt-3">
+                ¿No tienes una cuenta? <a href="{{ url_for('registro') }}">Registrarse</a>
+            </p>
+        </div>
+        <div class="switch-container">
+            <h2>¡Hola, amigo!</h2>
+            <p>¿Eres nuevo aquí? Regístrate para comenzar</p>
+            <a href="{{ url_for('registro') }}">Registrarse</a>
         </div>
     </div>
+</div>
 {% endblock %}
